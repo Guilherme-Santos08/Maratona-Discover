@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dev.finace$</title>
+
     <link rel="stylesheet" href="./style.css" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&family=Poppins:ital,wght@0,100;0,200;0,400;0,700;1,400&display=swap"
       rel="stylesheet"
     />
-    <title>dev.finace$</title>
   </head>
-
   <body>
     <header>
       <img src="assets/logo.svg" alt="Logo Dev Finance" />
@@ -49,7 +49,9 @@
       <section id="transaction">
         <h2 class="sr-only">Transações</h2>
 
-        <a href="#" class="button new">+ Nova Transação</a>
+        <a href="#" 
+        onclick="Modal.open()"
+        class="button new">+ Nova Transação</a>
         <table id="data-table">
           <thead>
             <tr>
@@ -90,8 +92,64 @@
       </section>
     </main>
 
+    <div class="modal-overlay">
+      <div class="modal">
+        <div class="form">
+          <h2>Nova Transação</h2>
+          <form action="">
+            <div class="input-group">
+              <label 
+              class="sr-only" 
+              for="description"> Descriçao</label>
+              <input
+                type="text"
+                id="description"
+                name="description"
+                placeholder="Descrição"
+              />
+            </div>
+
+            <div class="input-group">
+              <label 
+              class="sr-only" 
+              for="amount">Valor</label>
+              <input
+                type="number"s
+                step="0.01"
+                id="amount"
+                name="amount"
+                placeholder="0,00"
+              />
+              <small class="help">Use o sinal - (negativo) para despesas e , (vírgula para casas decimais) </small>
+            </div>
+
+            <div class="input-group">
+              <label 
+              class="sr-only" 
+              for="date"> Data</label>
+              <input
+                type="date"
+                id="date"
+                name="date"
+              />
+            </div>
+
+            <div class="input-group actions">
+              <a 
+              onclick="Modal.close()"
+              href="#" 
+              class="button cancel">Cancelar</a>
+              <button>Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <footer>
       <p>dev.finace$</p>
     </footer>
+
+    <script src="script.js"></script>
   </body>
 </html>
