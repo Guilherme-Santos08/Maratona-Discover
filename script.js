@@ -28,8 +28,8 @@ const transactions = [
   },
   {
     id: 1,
-    description: 'Luz',
-    amount: -50000,
+    description: 'Internet',
+    amount: -20000,
     date: '23/01/2021'
   }
 ]
@@ -45,3 +45,27 @@ const Transaction = {
     // entradas - saídas
   }
 }
+
+// Substituir os dados do HTML com os dados do JS
+
+const DOM = {
+  
+    addTransaction(transaction, index){
+      const tr = document.createElement('tr')
+      tr.innerHTML = DOM.innerHTMLTransaction()
+    },
+    innerHTMLTransaction() {
+    const html = `
+      <td class="description">Luz</td>
+      <td class="expense">- R$ 500,00</td>
+      <td class="date">23/01/2021</td>
+    <td>
+      <img src="./assets/minus.svg" alt="Remover transação" />
+    </td>
+    `
+
+    return html
+  }
+}
+
+DOM.innerHTMLTransaction()
