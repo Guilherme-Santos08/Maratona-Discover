@@ -13,60 +13,96 @@ const Modal = {
   },
 };
 
-const transactions = [
-  {
-    id: 1,
-    description: 'Luz',
-    amount: -50000,
-    date: '23/01/2021'
-  },
-  {
-    id: 2,
-    description: 'WebSite',
-    amount: 50000,
-    date: '23/01/2021'
-  },
-  {
-    id: 3,
-    description: 'Internet',
-    amount: -20000,
-    date: '23/01/2021'
-  },
-  {
-    id: 4,
-    description: 'App',
-    amount: 500000,
-    date: '23/01/2021'
-  }
-]
-
 const Transaction = {
-  icomes() {
-    // somar as entradas
+  all: [
+    // Isso e chamado de refatoracao
+    {
+      description: "Luz",
+      amount: -50000,
+      date: "23/01/2021",
+    },
+    {
+      description: "WebSite",
+      amount: 500000,
+      date: "23/01/2021",
+    },
+    {
+      description: "Internet",
+      amount: -20000,
+      date: "23/01/2021",
+    },
+    {
+      description: "App",
+      amount: 200000,
+      date: "23/01/2021",
+    },
+  ],
+
+  add(transaction) {
+    // Adicionar transações
+    Transaction.all.push(transaction);
+
+    App.reload();
   },
-  expense() {
-    // somas as saídas
+
+  remove(index) {
+    // Remover transações
+    Transaction.all.splice(index, 1);
+
+    App.reload();
   },
+
+  incomes() {
+    // Entrada
+    let income = 0;
+    // pegar todas as transacoes
+    // para cada transacao,
+    Transaction.all.forEach((transaction) => {
+      // se ela for maior que zero
+      if (transaction.amount > 0) {
+        // somar a uma variavel e retornar a variavel
+        income += transaction.amount;
+      }
+    });
+    return income;
+  },
+
+  expenses() {
+    // Saida
+    let expense = 0;
+    // pegar todas as transacoes
+    // para cada transacao,
+    Transaction.all.forEach((transaction) => {
+      // se ela for maior que zero
+      if (transaction.amount < 0) {
+        // somar a uma variavel e retornar a variavel
+        expense += transaction.amount;
+      }
+    });
+    return expense;
+  },
+
   total() {
-    // entradas - saídas
-  }
-}
+    // Total
+    return Transaction.incomes() + Transaction.expenses();
+  },
+};
 
 // Substituir os dados do HTML com os dados do JS
 
 const DOM = {
-  transactionsContainer: document.querySelector('#data-table tbody'),
+  transactionsContainer: document.querySelector("#data-table tbody"),
 
   addTransaction(transaction, index) {
-    const tr = document.createElement('tr')
-    tr.innerHTML = DOM.innerHTMLTransaction(transaction)
+    const tr = document.createElement("tr");
+    tr.innerHTML = DOM.innerHTMLTransaction(transaction);
 
-    DOM.transactionsContainer.appendChild(tr)
+    DOM.transactionsContainer.appendChild(tr);
   },
   innerHTMLTransaction(transaction) {
-    const CSSclass = transaction.amount > 0 ? "income" : "expense"
+    const CSSclass = transaction.amount > 0 ? "income" : "expense";
 
-    const amount = Utils.formatCurrency(transaction.amount)
+    const amount = Utils.formatCurrency(transaction.amount);
 
     const html = `
       <td class="description">${transaction.description}</td>
@@ -75,29 +111,103 @@ const DOM = {
       <td>
         <img src="./assets/minus.svg" alt="Remover transação" />
       </td>
-      `
+      `;
 
-    return html
-  }
-}
+    return html;
+  },
+
+  updateBalance() {
+    document.getElementById("incomeDisplay").innerHTML = Utils.formatCurrency(
+      Transaction.incomes()
+    ); // o Utils.formatCurrency está deixando o valor bonito, com virgulas e ponto
+    document.getElementById("expenseDisplay").innerHTML = Utils.formatCurrency(
+      Transaction.expenses()
+    );
+    document.getElementById("totalDisplay").innerHTML = Utils.formatCurrency(
+      Transaction.total()
+    );
+  },
+
+  clearTransactions() {
+    DOM.transactionsContainer.innerHTML = "";
+  },
+};
 
 const Utils = {
   formatCurrency(value) {
-    const signal = Number(value) < 0 ? "-" : ""
+    const signal = Number(value) < 0 ? "-" : "";
 
-    value = String(value).replace(/\D/g, "")
+    value = String(value).replace(/\D/g, "");
 
-    value = Number(value) / 100
+    value = Number(value) / 100;
 
     value = value.toLocaleString("pt-BR", {
       style: "currency",
-      currency: "BRL"
-    })
-    return signal + value
-  }
-}
+      currency: "BRL",
+    });
+    return signal + value;
+  },
+};
 
+const Form = {
+  description: document.querySelector("input#description"),
+  amount: document.querySelector("input#amount"),
+  date: document.querySelector("input#date"),
 
-transactions.forEach(function (transaction) {
-  DOM.addTransaction(transaction)
-})
+  getValues() {
+    return {
+      description: Form.description.value,
+      amount: Form.amount.value,
+      date: Form.date.value,
+    };
+  },
+  validateFields() {
+    const { description, amount, date } = Form.getValues();
+
+    if (
+      description.trim() === "" ||
+      amount.trim() === "" ||
+      date.trim() === ""
+    ) {
+      throw new Error("Por favor, preencha todos os campos");
+    }
+  },
+
+  formatValues(){
+
+  },
+  submit(event) {
+    // Puxei esse submit la do HTML, "onsubmit"
+    event.preventDefault();
+
+    try {
+      // vererificar se todas as informações foram preenchidas
+      Form.validateFields();
+      // formatar os dados para salvar
+      // Form.formatData()
+      // salvar
+      // apagar os dados do formulario
+      // modal feche
+      // Atualizar a aplicação
+    } catch (error) {
+      alert(error.message) // Essa linha está ligada com p "throw new Error"
+    }
+  },
+};
+
+const App = {
+  init() {
+    Transaction.all.forEach((transaction) => {
+      DOM.addTransaction(transaction);
+    });
+
+    DOM.updateBalance();
+  },
+
+  reload() {
+    DOM.clearTransactions(); // Vai limpar para não repetir
+    App.init();
+  },
+};
+
+App.init();
