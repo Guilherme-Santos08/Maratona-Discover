@@ -130,15 +130,14 @@ const DOM = {
 const Utils = {
 
   formatAmount(value){
-    value = Number(value) * 100
-    
-    return value
+    value = value * 100
+    return Math.round(value)
   },
 
   formatDate(date) { // configurando o formato da data
     const splittedDate = date.split("-")
 
-    return `${splittedDate[2]}/${splittedDate[1]}/${splittedDate[2]}`
+    return `${splittedDate[2]}/${splittedDate[1]}/${splittedDate[0]}`
   },
 
   formatCurrency(value) {
